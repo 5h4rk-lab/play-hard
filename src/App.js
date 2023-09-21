@@ -1,21 +1,14 @@
 import './App.css';
+import Signin from './Components/auth/signin';
+import SignUp from './Components/auth/signup';
+import AuthDetails from './Components/auth/authDetails';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Signin />
+      <SignUp />
+      <AuthDetails />
     </div>
   );
 }
