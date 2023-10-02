@@ -1,37 +1,46 @@
-import React, {useEffect,useState} from "react";
-import {auth}  from "../../firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { auth } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth"; // Import the signOut function from Firebase
 
 const AuthDetails = () => {
-    const [user, setUser] = useState(null);
-    useEffect(() => {
-       const listen = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                setUser(null);
-            }
-            });
+  const [user, setUser] = useState(null);
 
-            return listen;
-        },[]);
+  useEffect(() => {
+    const listen = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
 
-        const signOut = () => {
-            auth.signOut().then(() => {
-                // Sign-out successful.
-                }).catch((error) => {
-                // An error happened.
-                });
-        }
+    return listen;
+  }, []);
 
-    return(
-        <div className="auth-details-container">
-            {user ?<><h1>{`Logged In as ${user.email}`}</h1><button onClick={signOut}>Signout</button></>:<h1>Logged Out</h1>}
+  // Rename the local signOut function to avoid conflicts
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
 
-
-        </div>
-    )
-}
-
+  return (
+    <div className="auth-details-container">
+      {user ? (
+        <>
+          <h1>{`Logged In as ${user.email}`}</h1>
+          <button onClick={handleSignOut}>Signout</button>
+        </>
+      ) : (
+        <h1>Logged Out</h1>
+      )}
+    </div>
+  );
+};
 
 export default AuthDetails;
