@@ -7,7 +7,8 @@ import Signin from './Components/auth/signin';
 import SignUp from './Components/auth/signup';
 import AuthDetails from './Components/auth/authDetails';
 import CreateTournament from './Components/CreateTournament';
-import RegisteredTournaments from './Components/RegisteredTournaments'; // Adjust the path to your CreateTournament component
+import RegisteredTournaments from './Components/RegisteredTournaments';
+import EditTournament from './Components/EditTournament'; // Adjust the path to your CreateTournament component
 
 function App() {
   const [user, setUser] = useState(null); // local state to store the user
@@ -29,7 +30,9 @@ function App() {
         <Route path="/signin" element={user ? <Navigate to="/home" /> : <Signin />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/auth-details" element={<AuthDetails />} />
+        <Route path="/edit-tournament/:tournamentId" element={<EditTournament />} />
         <Route path="/registered-tournaments" element={<RegisteredTournaments />} />
+        <Route path="/edit/:tournamentId" element={<EditTournament />} />
         <Route path="/home" element={user ? <HomePage /> : <Navigate to="/signin" />} />
         <Route path="/create-tournament" element={user ? <CreateTournament /> : <Navigate to="/signin" />} />
         <Route path="/" element={<Navigate to="/signin" />} />

@@ -19,7 +19,6 @@ function HomePage() {
     fetchTournaments();
   }, []);
 
-
   return (
     <div>
       <h1>Home Page</h1>
@@ -29,6 +28,9 @@ function HomePage() {
           <li key={tournament.id}>
             {tournament.name} {tournament.date} 
             <RegisterToTournament userId={user?.uid} tournamentId={tournament.id} tournamentName={tournament.name} />
+            {tournament.createdBy === user?.uid && ( // Display the "Edit" button only for the creator
+              <Link to={`/edit/${tournament.id}`}>Edit</Link>
+            )}
           </li>
         ))}
       </ul>
@@ -38,4 +40,3 @@ function HomePage() {
 }
 
 export default HomePage;
-

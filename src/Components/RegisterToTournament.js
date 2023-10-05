@@ -13,7 +13,7 @@ function RegisterToTournament({ tournamentId, tournamentName }) {
     }
 
     // Debugging: Log the values of tournamentId and tournamentName
-    console.log('tournamentdata', tournamentId);
+    console.log('tournamentid', tournamentId);
     console.log('tournament name', tournamentName);
     
     const registrationsCollection = collection(db, 'registrations');
