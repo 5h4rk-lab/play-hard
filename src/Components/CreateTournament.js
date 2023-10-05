@@ -12,7 +12,6 @@ function CreateTournament() {
       const tournamentData = {
         name: tournamentName,
         date: tournamentDate,
-        //... other fields ...
       };
       
       await addDoc(collection(db, 'tournaments'), tournamentData);
@@ -20,6 +19,7 @@ function CreateTournament() {
       // Reset the form or navigate to another page
       setTournamentName('');
       setTournamentDate('');
+      console.log('Tournament created successfully');
     } catch (error) {
       console.error("Error adding document: ", error);
     }

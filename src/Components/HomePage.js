@@ -28,7 +28,7 @@ function HomePage() {
         {tournaments.map(tournament => (
           <li key={tournament.id}>
             {tournament.name} {tournament.date} 
-            <RegisterToTournament userId={user?.uid} tournamentId={tournament.id} />
+            <RegisterToTournament userId={user?.uid} tournamentId={tournament.id} tournamentName={tournament.name} />
           </li>
         ))}
       </ul>

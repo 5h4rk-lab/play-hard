@@ -3,7 +3,7 @@ import { db, auth } from './../firebase'; // adjust the import if needed
 import { collection, addDoc } from 'firebase/firestore';
 
 function RegisterToTournament({ tournamentId, tournamentName }) {
-  const userId = auth.currentUser?.uid; // get the user ID from the current user
+  const userId = auth.currentUser?.uid; // get thbe herent user
   const [status, setStatus] = useState('');
 
   const handleRegister = async () => {
@@ -14,7 +14,7 @@ function RegisterToTournament({ tournamentId, tournamentName }) {
 
     // Debugging: Log the values of tournamentId and tournamentName
     console.log('tournamentdata', tournamentId);
-    console.log('Tournament Name:', tournamentName);
+    console.log('tournament name', tournamentName);
     
     const registrationsCollection = collection(db, 'registrations');
     try {
