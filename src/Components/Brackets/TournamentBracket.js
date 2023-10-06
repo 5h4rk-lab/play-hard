@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from './../firebase';
+import { db } from '../../firebase';
 import SingleEliminationBracket from './SingleEliminationBracket';
 import DoubleEliminationBracket from './DoubleEliminationBracket';
-import './TournamentBracket.css'; // Import your CSS file for styling
+ // Import your CSS file for styling
 
 function TournamentBracket() {
   const { tournamentId } = useParams();

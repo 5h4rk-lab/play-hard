@@ -1,35 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   collection,
   query,
   where,
   getDocs,
 } from 'firebase/firestore';
-import { db } from './../firebase';
+import { db } from '../../firebase';
+import './viewbrackets.css';
 
-function ViewBrackets() {
-  const { tournamentId } = useParams();
+
+function Brackets({ users }) {
+  function generateTree(users) {
+    if (users.length === 1) {
+      return users[0];
+    }
+
+    let mid = Math.floor(users.length / 2);
+    return {
+      left: generateTree(users.slice(0, mid)),
+      right: generateTree(users.slice(mid))
+    };
+  }
+
+  function renderTree(node) {
+    if (typeof node === 'string') {
+      return <div className="box">{node}</div>;
+    }
+
+    return (
+      <div className="branch">
+        <div className="line"></div>
+        {renderTree(node.left)}
+        {renderTree(node.right)}
+      </div>
+    );
+  }
+
+  let tree = generateTree(users);
+
+  return <div className="bracket">{renderTree(tree)}</div>;
+}
+
+function ViewBrackets({ tournamentId }) {
   const [registeredUsers, setRegisteredUsers] = useState([]);
 
   useEffect(() => {
     const fetchRegisteredUsers = async () => {
       try {
-        // Create a query to get registrations for the specified tournamentId
         const registrationsCollectionRef = collection(db, 'registrations');
         const q = query(registrationsCollectionRef, where('tournamentId', '==', tournamentId));
-
-        // Fetch registered users based on the query
         const registrationsSnapshot = await getDocs(q);
-
-        // Extract user data from the snapshot
         const users = [];
         registrationsSnapshot.forEach((doc) => {
           const userData = doc.data();
-          users.push(userData.userId); // Assuming you store the userId in the registration document
+          users.push(userData.userId);
         });
 
-        // Set the registered users state
         setRegisteredUsers(users);
       } catch (error) {
         console.error('Error fetching registered users:', error);
@@ -48,7 +74,7 @@ function ViewBrackets() {
           <li key={index}>{userId}</li>
         ))}
       </ul>
-      {/* Add UI to display brackets here */}
+      {registeredUsers.length > 0 && <Brackets users={registeredUsers} />}
     </div>
   );
 }
