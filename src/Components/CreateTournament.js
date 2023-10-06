@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db, auth } from './../firebase'; // Import auth to get the user's UID
+import { useNavigate  } from 'react-router-dom';  
+
 
 function CreateTournament() {
   const [tournamentName, setTournamentName] = useState('');
@@ -30,11 +32,13 @@ function CreateTournament() {
       setTournamentDate('');
       setBracketType('');
       console.log('Tournament created successfully');
+      <p>tournament created successfully</p>
+      navigate('/home')
     } catch (error) {
       console.error("Error adding document: ", error);
     }
   };
-
+  const navigate = useNavigate();
   return (
     <form onSubmit={handleSubmit}>
       <label>
