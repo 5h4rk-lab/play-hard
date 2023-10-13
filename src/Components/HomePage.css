@@ -1,0 +1,74 @@
+.tournaments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f4f4f4;  /* A light background for better contrast */
+}
+
+.tournament-card {
+    width: 250px;
+    perspective: 1000px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for smooth hover effect */
+}
+
+.tournament-card:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Enhance shadow on hover */
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+}
+
+.tournament-card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 20px;  /* Add padding for better spacing */
+}
+
+.card-front {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f1f1 100%); /* Gradient background for a modern look */
+}
+
+.card-back {
+    background: linear-gradient(135deg, #f1f1f1 0%, #ffffff 100%); /* Gradient background */
+    transform: rotateY(180deg);
+}
+
+.pokemon-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;  /* Circular images for a softer look */
+    margin-bottom: 15px; /* Spacing between image and text */
+}
+
+h1, h2, h3, p {
+    margin: 10px 0; /* Consistent margin for all text elements */
+}
+
+h3 {
+    color: #333;  /* Dark color for better readability */
+}
+
+p {
+    color: #666;  /* Lighter color for descriptions */
+}
