@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import "./signin.css";
-import {auth}  from "../../firebase";
+import {auth , GoogleAuthProvider , signInWithPopup}  from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 
@@ -8,8 +8,7 @@ function Signin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
- // useHistory hook for redirecting
-    
+
     const signin = (e) => {
       e.preventDefault();
       signInWithEmailAndPassword(auth, email, password)
@@ -21,6 +20,19 @@ function Signin() {
           console.log(error);
         });
     };
+    
+    const signInWithGoogle = () => {
+      const provider = new GoogleAuthProvider();
+  
+      signInWithPopup(auth, provider)
+          .then((userCredential) => {
+              console.log(userCredential);
+              navigate('/home'); // Redirect to Home Page on successful sign-in
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+  };
 
     return( 
     <div className="sign-in-container">
@@ -30,10 +42,10 @@ function Signin() {
             onChange={(e) => setEmail(e.target.value) }></input>
             <input type="password" placeholder="enter your password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
             <button type="submit">Sign In</button>
-            </form>
+        </form>
+        <button onClick={signInWithGoogle}>Sign In with Google</button>
     </div>
     )
 }
-
 
 export default Signin;

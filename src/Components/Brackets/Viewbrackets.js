@@ -11,35 +11,49 @@ import './viewbrackets.css';
 
 function Brackets({ users }) {
   function generateTree(users) {
-    if (users.length === 1) {
-      return users[0];
-    }
+      // If there's just one user, return them
+      if (users.length === 1) {
+          return users[0];
+      }
+      
+      // Check if the number of users is not a power of two
+      const isPowerOfTwo = (num) => (num & (num - 1)) === 0;
+      if (!isPowerOfTwo(users.length)) {
+          // Add dummy placeholders to fill in the gaps
+          while (!isPowerOfTwo(users.length)) {
+              users.push('BYE');
+          }
+      }
 
-    let mid = Math.floor(users.length / 2);
-    return {
-      left: generateTree(users.slice(0, mid)),
-      right: generateTree(users.slice(mid))
-    };
+      let mid = Math.floor(users.length / 2);
+      return {
+          left: generateTree(users.slice(0, mid)),
+          right: generateTree(users.slice(mid))
+      };
   }
 
   function renderTree(node) {
-    if (typeof node === 'string') {
-      return <div className="box">{node}</div>;
-    }
+      if (typeof node === 'string') {
+          return <div className="box">{node}</div>;
+      }
 
-    return (
-      <div className="branch">
-        <div className="line"></div>
-        {renderTree(node.left)}
-        {renderTree(node.right)}
-      </div>
-    );
+      return (
+          <div className="branch">
+              {renderTree(node.left)}
+              <div className="pair">
+                  <div className="horizontal-line"></div>
+                  {renderTree(node.right)}
+              </div>
+              <div className="line"></div>
+          </div>
+      );
   }
 
   let tree = generateTree(users);
 
   return <div className="bracket">{renderTree(tree)}</div>;
 }
+
 
 function ViewBrackets({ tournamentId }) {
   const [registeredUsers, setRegisteredUsers] = useState([]);

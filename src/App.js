@@ -14,12 +14,9 @@ function App() {
   const [user, setUser] = useState(null); // local state to store the user
 
   useEffect(() => {
-    // Subscribe to user on auth state changes
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
     });
-
-    // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, []);
 
