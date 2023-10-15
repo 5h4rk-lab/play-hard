@@ -4,11 +4,11 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import SingleEliminationBracket from './SingleEliminationBracket';
 import DoubleEliminationBracket from './DoubleEliminationBracket';
- // Import your CSS file for styling
 
 function TournamentBracket() {
   const { tournamentId } = useParams();
   const [tournamentData, setTournamentData] = useState(null);
+  const [participantNames, setParticipantNames] = useState([]);
 
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -17,23 +17,30 @@ function TournamentBracket() {
       if (tournamentSnapshot.exists()) {
         const data = tournamentSnapshot.data();
         setTournamentData(data);
+
+        const userIds = data.participants;
+        const userPromises = userIds.map((id) => doc(db, 'users', id).get());
+        const userDocs = await Promise.all(userPromises);
+
+        const names = userDocs.map(doc => doc.data().username);
+        setParticipantNames(names);
       }
     };
 
     fetchTournamentData();
   }, [tournamentId]);
 
-  if (!tournamentData) {
+  if (!tournamentData || participantNames.length === 0) {
     return <div>Loading...</div>;
   }
 
-  const { bracketType, participants } = tournamentData;
+  const { bracketType } = tournamentData;
 
   return (
     <div className="tournament-bracket">
       <h1>Tournament Bracket</h1>
-      {bracketType === 'single-elimination' && <SingleEliminationBracket participants={participants} />}
-      {bracketType === 'double-elimination' && <DoubleEliminationBracket participants={participants} />}
+      {bracketType === 'single-elimination' && <SingleEliminationBracket participants={participantNames} />}
+      {bracketType === 'double-elimination' && <DoubleEliminationBracket participants={participantNames} />}
     </div>
   );
 }

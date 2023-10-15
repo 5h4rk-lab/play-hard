@@ -4,6 +4,8 @@ import {
   query,
   where,
   getDocs,
+  doc,
+  getDoc
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './viewbrackets.css';
@@ -55,42 +57,53 @@ function Brackets({ users }) {
 }
 
 
+async function getUsernameByUserId(userId) {
+  const userDoc = await getDoc(doc(db, 'users', userId));
+  if (userDoc.exists()) {
+      return userDoc.data().username;
+  } else {
+      return "Unknown User"; // or return userId or any fallback
+  }
+}
+
 function ViewBrackets({ tournamentId }) {
-  const [registeredUsers, setRegisteredUsers] = useState([]);
+const [registeredUsers, setRegisteredUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchRegisteredUsers = async () => {
-      try {
-        const registrationsCollectionRef = collection(db, 'registrations');
-        const q = query(registrationsCollectionRef, where('tournamentId', '==', tournamentId));
-        const registrationsSnapshot = await getDocs(q);
-        const users = [];
-        registrationsSnapshot.forEach((doc) => {
-          const userData = doc.data();
-          users.push(userData.userId);
-        });
+useEffect(() => {
+  const fetchRegisteredUsers = async () => {
+    try {
+      const registrationsCollectionRef = collection(db, 'registrations');
+      const q = query(registrationsCollectionRef, where('tournamentId', '==', tournamentId));
+      const registrationsSnapshot = await getDocs(q);
+      const usersPromises = [];
+      registrationsSnapshot.forEach((doc) => {
+        const userData = doc.data();
+        usersPromises.push(getUsernameByUserId(userData.userId));
+      });
 
-        setRegisteredUsers(users);
-      } catch (error) {
-        console.error('Error fetching registered users:', error);
-      }
-    };
+      const users = await Promise.all(usersPromises); // fetch all usernames in parallel
 
-    fetchRegisteredUsers();
-  }, [tournamentId]);
+      setRegisteredUsers(users);
+    } catch (error) {
+      console.error('Error fetching registered users:', error);
+    }
+  };
 
-  return (
-    <div>
-      <h1>Tournament Brackets</h1>
-      <h2>Registered Users</h2>
-      <ul>
-        {registeredUsers.map((userId, index) => (
-          <li key={index}>{userId}</li>
-        ))}
-      </ul>
-      {registeredUsers.length > 0 && <Brackets users={registeredUsers} />}
-    </div>
-  );
+  fetchRegisteredUsers();
+}, [tournamentId]);
+
+return (
+  <div>
+    <h1>Tournament Brackets</h1>
+    <h2>Registered Users</h2>
+    <ul>
+      {registeredUsers.map((username, index) => (
+        <li key={index}>{username}</li>
+      ))}
+    </ul>
+    {registeredUsers.length > 0 && <Brackets users={registeredUsers} />}
+  </div>
+);
 }
 
 export default ViewBrackets;
