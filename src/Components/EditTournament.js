@@ -11,6 +11,7 @@ import {
   getDocs,
 } from 'firebase/firestore'; 
 import { db } from './../firebase';
+import EditBrackets from './Brackets/EditBrackets';
 
 function EditTournament() {
   const { tournamentId } = useParams();
@@ -18,7 +19,13 @@ function EditTournament() {
 
   const [tournament, setTournament] = useState(null);
   const [bracketType, setBracketType] = useState('');
-  const [tournamentName, setTournamentName] = useState(''); // Add state for tournament name
+  const [tournamentName, setTournamentName] = useState('');
+  const [description, setDescription] = useState(''); // Add state for tournament description
+  const [isEditingBrackets, setIsEditingBrackets] = useState(false);
+
+  const handleEditBracketsToggle = () => {
+    setIsEditingBrackets(!isEditingBrackets);
+};
 
   useEffect(() => {
     const fetchTournament = async () => {
@@ -27,8 +34,9 @@ function EditTournament() {
       if (tournamentSnapshot.exists()) {
         const tournamentData = tournamentSnapshot.data();
         setTournament(tournamentData);
-        setTournamentName(tournamentData.name || ''); // Set the tournament name from the tournament data
-        setBracketType(tournamentData.bracketType || ''); // Set the bracket type from the tournament data
+        setTournamentName(tournamentData.name || '');
+        setBracketType(tournamentData.bracketType || '');
+        setDescription(tournamentData.description || ''); // Set the description from the tournament data
       }
     };
 
@@ -43,6 +51,10 @@ function EditTournament() {
     setTournamentName(e.target.value);
   };
 
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value); // Update the description state when changed
+  };
+
   const handleSaveChanges = async () => {
     if (!tournament) return;
 
@@ -50,7 +62,8 @@ function EditTournament() {
     try {
       await updateDoc(tournamentDocRef, {
         bracketType,
-        name: tournamentName, // Update the tournament name
+        name: tournamentName,
+        description, // Update the description in the Firestore document
       });
       alert('Tournament updated successfully!');
     } catch (error) {
@@ -112,8 +125,21 @@ function EditTournament() {
               {/* Add more bracket types as needed */}
             </select>
           </label>
+          <label>
+            Description:
+            <textarea
+              rows="4"
+              cols="50"
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </label>
           <button onClick={handleSaveChanges}>Save Changes</button>
           <button onClick={handleDeleteTournament}>Delete Tournament</button>
+          <button onClick={handleEditBracketsToggle}>
+            {isEditingBrackets ? 'Hide Brackets Editor' : 'Edit Brackets'}
+          </button>
+          {isEditingBrackets && <EditBrackets tournamentId={tournamentId} />}
         </>
       )}
     </div>

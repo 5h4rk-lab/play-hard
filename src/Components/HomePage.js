@@ -7,6 +7,7 @@ import './HomePage.css';
 
 function HomePage() {
   const [tournaments, setTournaments] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = auth.currentUser;
 
   useEffect(() => {
@@ -28,10 +29,35 @@ function HomePage() {
     fetchTournaments();
   }, []);
 
+  const handleSortClick = () => {
+    // Sort tournaments by date (latest to oldest)
+    const sortedTournaments = [...tournaments];
+    sortedTournaments.sort((a, b) => new Date(b.date) - new Date(a.date));
+    setTournaments(sortedTournaments);
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <div className="tournaments">
-      <h1>Home Page</h1>
-      <h2>Here is the list of tournaments</h2>
+    <div className="tournaments-container">
+      <div className="tournaments-header">
+        <h1>List of Tournaments</h1>
+        <div className="sort-button">
+          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            Sort by Date
+            {isDropdownOpen ? (
+              <i className="fas fa-caret-up"></i>
+            ) : (
+              <i className="fas fa-caret-down"></i>
+            )}
+          </button>
+          {isDropdownOpen && (
+            <div className="dropdown-content">
+              <button onClick={handleSortClick}>Latest to Oldest</button>
+              {/* Add more sorting options here */}
+            </div>
+          )}
+        </div>
+      </div>
       <div className="tournaments-list">
         {tournaments.map(tournament => (
           <div className="tournament-card" key={tournament.id}>
@@ -45,14 +71,13 @@ function HomePage() {
                 <p>Description: {tournament.description || 'No description provided'}</p>
                 <RegisterToTournament userId={user?.uid} tournamentId={tournament.id} tournamentName={tournament.name} />
                 {tournament.createdBy === user?.uid && ( 
-                  <Link to={`/edit/${tournament.id}`}>Edit</Link>
+                  <Link to={`/edit/${tournament.id}`} className="edit-link">Edit</Link>
                 )}
               </div>
             </div>
           </div>
         ))}
       </div>
-      <Link to="/registered-tournaments">View Registered Tournaments</Link>
     </div>
   );
 }

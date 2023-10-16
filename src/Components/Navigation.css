@@ -1,0 +1,35 @@
+/* Navigation container */
+.navigation {
+    background-color: #333; /* Background color for the navigation bar */
+    padding: 10px 0; /* Add some padding for spacing */
+    text-align: center;
+  }
+  
+  /* Navigation list */
+  .navigation-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Navigation list items */
+  .navigation-list li {
+    display: inline;
+    margin-right: 10px; /* Add spacing between list items */
+  }
+  
+  /* Navigation links */
+  .nav-link {
+    text-decoration: none;
+    color: #fff; /* Link text color */
+    font-weight: bold; /* Make the links bold */
+    padding: 5px 10px; /* Add padding for better clickability */
+  }
+  
+  /* Style for links on hover */
+  .nav-link:hover {
+    background-color: #555; /* Darken the background color on hover */
+    border-radius: 5px; /* Add a slight border radius for rounded corners */
+    transition: background-color 0.2s; /* Smooth transition for background color */
+  }
+  
